@@ -79,15 +79,18 @@ def plot_on_map():
         return
 
     # Create a Folium map centered at the specified location
-    print("Center Location:", location_data.latitude, location_data.longitude)  # Debugging
+    #print("Center Location:", location_data.latitude, location_data.longitude)  # Debugging
     #map = folium.Map(location=[location_data.latitude, location_data.longitude], zoom_start=4)
-    map = folium.Map(location=[0, 0], zoom_start=2)
+    map = folium.Map(location=[0, 0], zoom_start=2, str='VikTrace')
 
     # Add markers for each point on the map
-    points = points_entry.get().split(';')  # Split input by semicolon
+    #points = points_entry.get().split(';')  # Split input by semicolon
+    points = coords_str
     print("Points:", points)  # Debugging
-    for point in points:
-        lat, lon = point.split(',')  # Split latitude and longitude
+    for point in current_data:
+        lat = point[2]
+        lon = point[3]
+        #lat, lon = point.split(',')  # Split latitude and longitude
         print("Latitude:", lat, "Longitude:", lon)  # Debugging
         folium.Marker([float(lat), float(lon)]).add_to(map)
 
