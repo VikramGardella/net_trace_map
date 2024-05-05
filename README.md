@@ -3,6 +3,8 @@ A Python script that uses an "Autonomous System Number" database from GeoIP's ar
 
 pip install tkhtmlview
 
+pip install tkinterweb
+
 pip install geopy
 
 pip install geoip2
