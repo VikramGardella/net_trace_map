@@ -3,7 +3,12 @@ import time
 import geoip2.database
 import tkinter as TK
 import folium
+from tkinter import ttk
+from folium import Map, Marker
 from geopy.geocoders import Nominatim
+from tkhtmlview import HTMLLabel
+import webbrowser
+import os
 
 
 def get_network_connections():
@@ -38,7 +43,8 @@ def get_asn_info(ip_address):
 # Function to plot points on the map based on location information
 def plot_on_map():
     # Get the location information from the user input fields
-    location = location_entry.get()
+    #location = location_entry.get()
+    location = 'Cincinnati'
     geolocator = Nominatim(user_agent="map_plotter")
     location_data = geolocator.geocode(location)
 
@@ -49,7 +55,8 @@ def plot_on_map():
 
     # Create a Folium map centered at the specified location
     print("Center Location:", location_data.latitude, location_data.longitude)  # Debugging
-    map = folium.Map(location=[location_data.latitude, location_data.longitude], zoom_start=10)
+    #map = folium.Map(location=[location_data.latitude, location_data.longitude], zoom_start=4)
+    map = folium.Map(location=[0, 0], zoom_start=2)
 
     # Add markers for each point on the map
     points = points_entry.get().split(';')  # Split input by semicolon
@@ -61,6 +68,24 @@ def plot_on_map():
 
     # Save the map as an HTML file
     map.save('map.html')
+    
+    #webbrowser.open('file://' + os.path.abspath('map.html'))
+
+    # Open the map HTML file in the default web browser and embed it in the GUI
+    browser_frame = ttk.Frame(root)
+    browser_frame.pack(expand=True, fill='both')
+
+    webbrowser.open('file://' + os.path.abspath('map.html'), new=1)
+
+'''
+    # Load the map HTML file into the Tkinter GUI
+    with open('map.html', 'r') as file:
+        html_content = file.read()
+
+    # Create a Tkinter HTMLLabel widget to display the map
+    html_label = HTMLLabel(root, html=html_content)
+    html_label.pack(expand=True, fill='both')
+'''
 
 
 
