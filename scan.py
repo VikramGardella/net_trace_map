@@ -29,6 +29,7 @@ def get_geolocation(ip_address):
 def get_asn_info(ip_address):
     # Initialize GeoIP2 reader
     reader = geoip2.database.Reader('./GeoLite2-ASN.mmdb')  # Replace 'path/to/GeoLite2-ASN.mmdb' with the actual path
+    reader_city = geoip2.database.Reader('./GeoLite2-City.mmdb')
 
     # Get ASN information for the IP address
     response = reader.asn(ip_address)
@@ -37,11 +38,35 @@ def get_asn_info(ip_address):
     asn_number = response.autonomous_system_number
     asn_organization = response.autonomous_system_organization
 
-    return asn_number, asn_organization
+    # Get location information for the IP address
+    location_response = reader_city.city(ip_address)
+    latitude = location_response.location.latitude
+    longitude = location_response.location.longitude
+
+    return asn_number, asn_organization, latitude, longitude
+
+
+def gen_coordinate_pairs(conns):
+    concat = ''
+    for i in range(len(conns)):
+        concat += (str(conns[i][2]) + ',' + str(conns[i][3]))
+        if(i != len(conns)-1):
+            concat += ';'
+    return(concat)
+
 
 
 # Function to plot points on the map based on location information
 def plot_on_map():
+    current_ips = get_foreign_ip_addresses()
+    current_data = []
+    for i in range(len(current_ips)):
+        current_data.append(get_asn_info(current_ips[i]))
+    print(current_data)
+    coords_str = gen_coordinate_pairs(current_data)
+    print('concatenated coord pairs: ' + coords_str)
+
+
     # Get the location information from the user input fields
     #location = location_entry.get()
     location = 'Cincinnati'
@@ -104,15 +129,17 @@ root = TK.Tk()
 root.geometry('800x600')  # Set initial size of the GUI
 root.title('Net Scan')
 
+'''
 TK.Label(root, text="Enter location:").pack()
 location_entry = TK.Entry(root)
 location_entry.pack()
+'''
 
 TK.Label(root, text="Enter points (separate by comma):").pack()
 points_entry = TK.Entry(root)
 points_entry.pack()
 
-plot_button = TK.Button(root, text="Plot on Map", command=plot_on_map)
+plot_button = TK.Button(root, text="Update Map Plots", command=plot_on_map)
 plot_button.pack()
 
 root.mainloop()
