@@ -54,6 +54,28 @@ def plot_on_map():
         current_data.append(get_asn_info(current_ips[i]))
     print(current_data)
 
+    # Create the table
+    table = ttk.Treeview(root)
+    table["columns"] = ("ASN Number", "ASN Organization", "Latitude", "Longitude")
+    table.heading("#0", text="ID")
+    table.heading("ASN Number", text="ASN #")
+    table.heading("ASN Organization", text="Organization")
+    table.heading("Latitude", text="Latitude")
+    table.heading("Longitude", text="Longitude")
+
+    # Set initial widths of columns
+    table.column("#0", width=40)  # Connection ID column
+    table.column("ASN Number", width=90)
+    table.column("ASN Organization", width=270)
+    table.column("Latitude", width=90)
+    table.column("Longitude", width=90)
+
+    # Insert data into the table
+    for i, data in enumerate(current_data):
+        table.insert("", i, text=str(i+1), values=data)
+
+    # Place the table in the GUI
+    table.pack()
 
     # Get the location information from the user input fields
     location = 'Cincinnati'
